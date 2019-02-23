@@ -10,6 +10,18 @@ void APaddleController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	CreatePlayerView();
+
+}
+
+void APaddleController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+void APaddleController::CreatePlayerView()
+{
 	FVector CameraLocation = FVector::ZeroVector;
 	for (TActorIterator<AStaticMeshActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
@@ -18,14 +30,10 @@ void APaddleController::BeginPlay()
 			CameraLocation = ActorItr->GetActorLocation();
 	}
 
-	CameraLocation += FVector(400, 400, 1000);
-	auto CameraView = GetWorld()->SpawnActor<ACameraActor>(CameraLocation, FRotator(-90, 0, 0));
-
-	SetViewTarget(Cast<AActor>(CameraView));
-}
-
-void APaddleController::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
+	if (CameraLocation != FVector::ZeroVector)
+	{
+		CameraLocation += FVector(400, 400, 1000);
+		auto CameraView = GetWorld()->SpawnActor<ACameraActor>(CameraLocation, FRotator(-90, 0, 0));
+		SetViewTarget(CameraView);
+	}
 }

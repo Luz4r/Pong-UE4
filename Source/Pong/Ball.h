@@ -4,16 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "Paddle.generated.h"
+#include "Components/StaticMeshComponent.h"
+#include "TimerManager.h"
+#include "Ball.generated.h"
 
 UCLASS()
-class PONG_API APaddle : public APawn
+class PONG_API ABall : public APawn
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	APaddle();
+	ABall();
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,6 +28,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable, Category = Setup)
+		void SetBallReference(UStaticMeshComponent* BallToSet);
+
 private:
-	
+	UStaticMeshComponent* Ball = nullptr;
+	UPROPERTY(EditAnywhere, Category = Velocity)
+		float XVelocity = 0;
+	UPROPERTY(EditAnywhere, Category = Velocity)
+		float YVelocity = -400;
+	FTimerHandle handle;
 };
