@@ -25,7 +25,6 @@ void APaddleController::CreatePlayerView()
 	FVector CameraLocation = FVector::ZeroVector;
 	for (TActorIterator<AStaticMeshActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
-		AStaticMeshActor *Mesh = *ActorItr;
 		if (ActorItr->GetName() == FString("Floor_400x400_2"))
 			CameraLocation = ActorItr->GetActorLocation();
 	}

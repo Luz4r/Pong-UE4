@@ -32,3 +32,15 @@ void APaddle::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void APaddle::SetPaddleReference(UStaticMeshComponent* PaddleToSet)
+{
+	Paddle = PaddleToSet;
+}
+
+void APaddle::MoveToBall(float X)
+{
+	if (!Paddle) { return; }
+
+	Paddle->SetPhysicsLinearVelocity(FVector(X, 0, 0));
+}
+
