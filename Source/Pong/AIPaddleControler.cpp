@@ -32,8 +32,10 @@ void AAIPaddleController::MoveToBall()
 
 	if (ControlledPaddle->GetActorLocation().X > BallOnScene->GetActorLocation().X)
 		ControlledPaddle->MoveToBall(-ControlledPaddle->XSpeed);
-	else 
+	else if (ControlledPaddle->GetActorLocation().X < BallOnScene->GetActorLocation().X)
 		ControlledPaddle->MoveToBall(ControlledPaddle->XSpeed);
+	else
+		ControlledPaddle->MoveToBall(0.f);
 }
 
 

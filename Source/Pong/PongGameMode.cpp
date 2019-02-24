@@ -17,6 +17,7 @@ void APongGameMode::StartPlay()
 		else
 			OpponentGoal = *ActorItr;
 	}
+	HUD = (APlayerHUD*)GetWorld()->GetFirstPlayerController()->GetHUD();
 }
 
 void APongGameMode::StartMatch()
@@ -56,4 +57,6 @@ void APongGameMode::ScorePoint(bool HasPlayerScored)
 		PlayerPoints++;
 	else
 		OpponentPoints++;
+
+	HUD->SetScore(PlayerPoints, OpponentPoints);
 }

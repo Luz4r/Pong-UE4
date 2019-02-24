@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
 #include "Ball.h"
+#include "PlayerHUD.h"
 #include "Engine/TriggerBox.h"
 #include "PongGameMode.generated.h"
 
@@ -38,6 +39,7 @@ private:
 	ATriggerBox* PlayerGoal = nullptr;
 	ATriggerBox* OpponentGoal = nullptr;
 	ABall* BallOnScene = nullptr;
+	APlayerHUD* HUD = nullptr;
 
 	FTimerHandle handle;
 };
