@@ -21,11 +21,9 @@ void ABall::BeginPlay()
 	int RandomWay = (rand() % 100) + 1;
 	XVelocity *= (RandomWay > 50) ? -1 : 1;
 
-	UE_LOG(LogTemp, Warning, TEXT("Ball YVel: %f, XVel: %f"), YVelocity, XVelocity);
-
 	GetWorld()->GetTimerManager().SetTimer(handle, [this]()
 	{
-		Ball->SetPhysicsLinearVelocity(FVector(XVelocity, YVelocity, 0));
+		SetBallVelocity(FVector(XVelocity, YVelocity, 0));
 	}
 	, 2, false);
 }
@@ -47,5 +45,21 @@ void ABall::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ABall::SetBallReference(UStaticMeshComponent* BallToSet) 
 {
 	Ball = BallToSet;
+}
+
+void ABall::SetBallVelocity(FVector Velocity)
+{
+	Ball->SetPhysicsLinearVelocity(Velocity);
+}
+
+FVector ABall::RandomizeVelocity(bool HasPlayerScored)
+{
+	YVelocity = (rand() % 201) + 200;
+	XVelocity = 400 - YVelocity;
+	int RandomWay = (rand() % 100) + 1;
+	XVelocity *= (RandomWay > 50) ? -1 : 1;
+	YVelocity *= HasPlayerScored ? 1 : -1;
+
+	return FVector(XVelocity, YVelocity, 0);
 }
 

@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
-#include "Engine/World.h"
 #include "Ball.h"
+#include "Engine/TriggerBox.h"
 #include "PongGameMode.generated.h"
 
 /**
@@ -18,7 +18,26 @@ class PONG_API APongGameMode : public AGameMode
 
 public:
 	virtual void StartPlay() override;
+	virtual void StartMatch() override;
+	virtual void Tick(float DeltaTime) override;
 	
 	UPROPERTY(EditAnywhere, Category = Setup)
 		TSubclassOf<ABall> BallBlueprint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Setup)
+		FVector BallInitialLocation = FVector(400, 400, 68);
+
+	UPROPERTY(BlueprintReadOnly)
+		int PlayerPoints = 0;
+	UPROPERTY(BlueprintReadOnly)
+		int OpponentPoints = 0;
+
+private:
+	void ScorePoint(bool HasPlayerScored);
+
+	ATriggerBox* PlayerGoal = nullptr;
+	ATriggerBox* OpponentGoal = nullptr;
+	ABall* BallOnScene = nullptr;
+
+	FTimerHandle handle;
 };
