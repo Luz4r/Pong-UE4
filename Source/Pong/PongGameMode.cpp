@@ -44,7 +44,7 @@ void APongGameMode::Tick(float DeltaTime)
 
 void APongGameMode::ScorePoint(bool HasPlayerScored)
 {
-	BallOnScene->SetActorLocation(BallInitialLocation); //TODO Make points
+	BallOnScene->SetActorLocation(BallInitialLocation);
 	BallOnScene->SetBallVelocity(FVector::ZeroVector);
 
 	GetWorld()->GetTimerManager().SetTimer(handle, [this, HasPlayerScored]()

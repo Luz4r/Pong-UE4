@@ -2,6 +2,7 @@
 
 #include "Ball.h"
 #include "Engine/World.h"
+#include "Paddle.h"
 
 
 // Sets default values
@@ -16,14 +17,14 @@ void ABall::BeginPlay()
 {
 	Super::BeginPlay();
 
-	YVelocity = (rand() % 201) + 200;
-	XVelocity = 400 - YVelocity;
+	Velocity.Y = (rand() % 201) + 200;
+	Velocity.X = 400 - Velocity.Y;
 	int RandomWay = (rand() % 100) + 1;
-	XVelocity *= (RandomWay > 50) ? -1 : 1;
+	Velocity.X *= (RandomWay > 50) ? -1 : 1;
 
 	GetWorld()->GetTimerManager().SetTimer(handle, [this]()
 	{
-		SetBallVelocity(FVector(XVelocity, YVelocity, 0));
+		SetBallVelocity(Velocity);
 	}
 	, 2, false);
 }
@@ -42,6 +43,26 @@ void ABall::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void ABall::NotifyHit(UPrimitiveComponent * MyComp, AActor * Other, UPrimitiveComponent * OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult & Hit)
+{
+	FVector BallVelocity = Ball->GetPhysicsLinearVelocity();
+
+	Ball->SetAllPhysicsAngularVelocity(FVector::ZeroVector);
+	Ball->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
+
+	//Mirror the Direction so that we can get the new trajectory of the ball
+	auto NewVelocity = BallVelocity.MirrorByVector(HitNormal);
+
+	//If the ball hits the paddle, add Z velocity to the ball (This can become very fast)
+	if (Other->GetName().Equals("Paddle_BP_122") || Other->GetName().Equals("Paddle_BP_C_0"))
+	{
+		APaddle* Paddle = Cast<APaddle>(Other);
+		NewVelocity.X += (Paddle->GetVelocity().X);
+	}
+
+	SetBallVelocity(NewVelocity);
+}
+
 void ABall::SetBallReference(UStaticMeshComponent* BallToSet) 
 {
 	Ball = BallToSet;
@@ -54,12 +75,12 @@ void ABall::SetBallVelocity(FVector Velocity)
 
 FVector ABall::RandomizeVelocity(bool HasPlayerScored)
 {
-	YVelocity = (rand() % 201) + 200;
-	XVelocity = 400 - YVelocity;
+	Velocity.Y = (rand() % 201) + 200;
+	Velocity.X = 400 - Velocity.Y;
 	int RandomWay = (rand() % 100) + 1;
-	XVelocity *= (RandomWay > 50) ? -1 : 1;
-	YVelocity *= HasPlayerScored ? 1 : -1;
+	Velocity.X *= (RandomWay > 50) ? -1 : 1;
+	Velocity.Y *= HasPlayerScored ? 1 : -1;
 
-	return FVector(XVelocity, YVelocity, 0);
+	return Velocity;
 }
 
