@@ -43,25 +43,25 @@ void ABall::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-void ABall::NotifyHit(UPrimitiveComponent * MyComp, AActor * Other, UPrimitiveComponent * OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult & Hit)
-{
-	FVector BallVelocity = Ball->GetPhysicsLinearVelocity();
-
-	Ball->SetAllPhysicsAngularVelocity(FVector::ZeroVector);
-	Ball->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
-
-	//Mirror the Direction so that we can get the new trajectory of the ball
-	auto NewVelocity = BallVelocity.MirrorByVector(HitNormal);
-
-	//If the ball hits the paddle, add Z velocity to the ball (This can become very fast)
-	if (Other->GetName().Equals("Paddle_BP_122") || Other->GetName().Equals("Paddle_BP_C_0"))
-	{
-		APaddle* Paddle = Cast<APaddle>(Other);
-		NewVelocity.X += (Paddle->GetVelocity().X);
-	}
-
-	SetBallVelocity(NewVelocity);
-}
+//void ABall::NotifyHit(UPrimitiveComponent * MyComp, AActor * Other, UPrimitiveComponent * OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult & Hit)
+//{
+//	FVector BallVelocity = Ball->GetPhysicsLinearVelocity();
+//
+//	Ball->SetAllPhysicsAngularVelocity(FVector::ZeroVector);
+//	Ball->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
+//
+//	//Mirror the Direction so that we can get the new trajectory of the ball
+//	auto NewVelocity = BallVelocity.MirrorByVector(HitNormal);
+//
+//	//If the ball hits the paddle, add Z velocity to the ball (This can become very fast)
+//	if (Other->GetName().Equals("Paddle_BP_122") || Other->GetName().Equals("Paddle_BP_C_0"))
+//	{
+//		APaddle* Paddle = Cast<APaddle>(Other);
+//		NewVelocity.X += (Paddle->GetVelocity().X);
+//	}
+//
+//	SetBallVelocity(NewVelocity);
+//}
 
 void ABall::SetBallReference(UStaticMeshComponent* BallToSet) 
 {
