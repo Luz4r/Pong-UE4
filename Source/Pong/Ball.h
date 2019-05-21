@@ -34,11 +34,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Setup)
 		void SetBallReference(UStaticMeshComponent* BallToSet);
 
-	void SetBallVelocity(FVector Velocity);
-	FVector RandomizeVelocity(bool HasPlayerScored);
+	void SetBallDirection(FVector Direction);
+	FVector RandomizeDirection(bool HasPlayerScored);
 
 private:
 	UStaticMeshComponent* Ball = nullptr;
-	FVector Velocity;
+	UPROPERTY(EditAnywhere, Category = Setup)
+		float Velocity = 300.f;
 	FTimerHandle handle;
+	FVector Direction;
 };

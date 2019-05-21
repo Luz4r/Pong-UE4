@@ -45,13 +45,13 @@ void APongGameMode::Tick(float DeltaTime)
 void APongGameMode::ScorePoint(bool HasPlayerScored)
 {
 	BallOnScene->SetActorLocation(BallInitialLocation);
-	BallOnScene->SetBallVelocity(FVector::ZeroVector);
+	BallOnScene->SetBallDirection(FVector::ZeroVector);
 
 	GetWorld()->GetTimerManager().SetTimer(
 		handle, 
 		[this, HasPlayerScored]()
 		{
-			BallOnScene->SetBallVelocity(BallOnScene->RandomizeVelocity(HasPlayerScored));
+			BallOnScene->SetBallDirection(BallOnScene->RandomizeDirection(HasPlayerScored));
 		},
 		2, false);
 

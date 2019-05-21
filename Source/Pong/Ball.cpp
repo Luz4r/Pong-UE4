@@ -17,14 +17,9 @@ void ABall::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Velocity.Y = (rand() % 201) + 200;
-	Velocity.X = 400 - Velocity.Y;
-	int RandomWay = (rand() % 100) + 1;
-	Velocity.X *= (RandomWay > 50) ? -1 : 1;
-
 	GetWorld()->GetTimerManager().SetTimer(handle, [this]()
 	{
-		SetBallVelocity(Velocity);
+		SetBallDirection(RandomizeDirection(true));
 	}
 	, 2, false);
 }
@@ -33,7 +28,9 @@ void ABall::BeginPlay()
 void ABall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	Ball->SetPhysicsLinearVelocity(Velocity);
+	Ball->SetPhysicsLinearVelocity(
+		FVector(Direction.X * Velocity, Direction.Y * Velocity, Direction.Y * Velocity)
+	);
 }
 
 // Called to bind functionality to input
@@ -46,22 +43,20 @@ void ABall::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ABall::NotifyHit(UPrimitiveComponent * MyComp, AActor * Other, UPrimitiveComponent * OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult & Hit)
 {
 	UE_LOG(LogTemp, Warning, TEXT("UDERZONO!!"));
-	FVector BallVelocity = Ball->GetPhysicsLinearVelocity();
 
 	Ball->SetAllPhysicsAngularVelocity(FVector::ZeroVector);
 	Ball->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
 
 	//Mirror the Direction so that we can get the new trajectory of the ball
-	auto NewVelocity = BallVelocity.MirrorByVector(HitNormal);
+	Direction = Direction.MirrorByVector(HitNormal);
 
 	//If the ball hits the paddle, add Z velocity to the ball (This can become very fast)
 	if (Other->GetName().Equals("Paddle_BP_122") || Other->GetName().Equals("Paddle_BP_C_0"))
 	{
 		APaddle* Paddle = Cast<APaddle>(Other);
-		NewVelocity.X += (Paddle->GetVelocity().X);
+		if(std::abs(Direction.X * Velocity) < 700.f)
+			Direction.X += (Paddle->GetVelocity().X / (Velocity*2));
 	}
-
-	SetBallVelocity(NewVelocity);
 }
 
 void ABall::SetBallReference(UStaticMeshComponent* BallToSet) 
@@ -69,19 +64,18 @@ void ABall::SetBallReference(UStaticMeshComponent* BallToSet)
 	Ball = BallToSet;
 }
 
-void ABall::SetBallVelocity(FVector Velocity)
+void ABall::SetBallDirection(FVector Direction)
 {
-	this->Velocity = Velocity;
+	this->Direction = Direction;
 }
 
-FVector ABall::RandomizeVelocity(bool HasPlayerScored)
+FVector ABall::RandomizeDirection(bool HasPlayerScored)
 {
-	Velocity.Y = (rand() % 201) + 200;
-	Velocity.X = 400 - Velocity.Y;
-	int RandomWay = (rand() % 100) + 1;
-	Velocity.X *= (RandomWay > 50) ? -1 : 1;
-	Velocity.Y *= HasPlayerScored ? 1 : -1;
+	Direction.Y = 1.f;
+	Direction.X = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	Direction.X *= (rand() % 100 > 50) ? -1.f : 1.f;
+	Direction.Y *= HasPlayerScored ? 1.f : -1.f;
 
-	return Velocity;
+	return Direction;
 }
 
