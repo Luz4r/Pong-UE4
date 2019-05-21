@@ -47,11 +47,13 @@ void APongGameMode::ScorePoint(bool HasPlayerScored)
 	BallOnScene->SetActorLocation(BallInitialLocation);
 	BallOnScene->SetBallVelocity(FVector::ZeroVector);
 
-	GetWorld()->GetTimerManager().SetTimer(handle, [this, HasPlayerScored]()
-	{
-		BallOnScene->SetBallVelocity(BallOnScene->RandomizeVelocity(HasPlayerScored));
-	}
-	, 2, false);
+	GetWorld()->GetTimerManager().SetTimer(
+		handle, 
+		[this, HasPlayerScored]()
+		{
+			BallOnScene->SetBallVelocity(BallOnScene->RandomizeVelocity(HasPlayerScored));
+		},
+		2, false);
 
 	if (HasPlayerScored)
 		PlayerPoints++;
