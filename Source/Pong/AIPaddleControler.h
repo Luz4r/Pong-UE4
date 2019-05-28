@@ -26,4 +26,5 @@ private:
 	FTimerHandle handle;
 	APaddle* ControlledPaddle = nullptr;
 	void MoveToBall();
+	FVector StartingPaddleLocation;
 };

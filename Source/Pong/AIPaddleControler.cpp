@@ -18,6 +18,7 @@ void AAIPaddleController::BeginPlay()
 	, 1, false);
 
 	ControlledPaddle = Cast<APaddle>(GetPawn());
+	StartingPaddleLocation = ControlledPaddle->GetActorLocation();
 }
 
 void AAIPaddleController::Tick(float DeltaTime)
@@ -30,16 +31,17 @@ void AAIPaddleController::MoveToBall()
 {
 	if (!ControlledPaddle || !BallOnScene) { return; }
 
+	if (BallOnScene->GetActorLocation().X == StartingPaddleLocation.X)
+		ControlledPaddle->SetActorLocation(StartingPaddleLocation);
 
-	if (!FMath::IsNearlyEqual(ControlledPaddle->GetActorLocation().X, BallOnScene->GetActorLocation().X, 1.f))
-	{
-		if (ControlledPaddle->GetActorLocation().X > BallOnScene->GetActorLocation().X)
-			ControlledPaddle->MoveToBall(-ControlledPaddle->XSpeed);
-		else if (ControlledPaddle->GetActorLocation().X < BallOnScene->GetActorLocation().X)
-			ControlledPaddle->MoveToBall(ControlledPaddle->XSpeed);
-		else
-			ControlledPaddle->MoveToBall(0.f);
-	}
+
+	if (ControlledPaddle->GetActorLocation().X > BallOnScene->GetActorLocation().X)
+		ControlledPaddle->MoveToBall(-ControlledPaddle->XSpeed);
+	else if (ControlledPaddle->GetActorLocation().X < BallOnScene->GetActorLocation().X)
+		ControlledPaddle->MoveToBall(ControlledPaddle->XSpeed);
+	else
+		ControlledPaddle->MoveToBall(0.f);
+
 }
 
 

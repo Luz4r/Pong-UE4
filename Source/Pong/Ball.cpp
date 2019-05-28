@@ -42,8 +42,6 @@ void ABall::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABall::NotifyHit(UPrimitiveComponent * MyComp, AActor * Other, UPrimitiveComponent * OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult & Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("UDERZONO!!"));
-
 	Ball->SetAllPhysicsAngularVelocity(FVector::ZeroVector);
 	Ball->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
 
