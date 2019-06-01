@@ -1,4 +1,4 @@
 # Pong-UE4
 
 
-![PONG](https://media.giphy.com/media/UrJKPLMbdRBpi9nd8u/giphy.gif)
+![PONG](https://media.giphy.com/media/RhkXdxVzuZo0t54SG6/giphy.gif)
